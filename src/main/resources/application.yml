@@ -1,0 +1,26 @@
+spring:
+  application:
+    name: stripe-payments
+  datasource:
+    driver-class-name: com.mysql.cj.jdbc.Driver
+    url: jdbc:mysql://localhost:3306/dinvoice
+    username: ecommerceapp
+    password: ecommerceapp
+  jpa:
+    database-platform: org.hibernate.dialect.MySQL8Dialect
+    generate-ddl: true
+    show-sql: true
+    hibernate:
+      ddl-auto: update
+    properties:
+      hibernate:
+        globally_quoted_identifiers: true
+        dialect: org.hibernate.dialect.MySQL8Dialect
+        format_sql: true
+  sql:
+    init:
+      mode: never
+      continue-on-error: false
+
+stripe-secret-key: sk_test_51OycrvCATvflhqx1DUgafLtYixkgbHZ3Ov9hVSBruOxaTkEh0utBC75DNfLVvfg2YXT1VEpYmvS0dSu763jzEBWn00M9YCAnSR
+stripe-public-key: pk_test_51OycrvCATvflhqx11RK7H56bYmmUSXvDEv8Syo9qxfuXmtdUtCmgALIG0QUqsB3FLteINAP6f82sk2CiaWxmd5u800XhYYYjdq
