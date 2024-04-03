@@ -3,32 +3,30 @@ package com.strippayments.strippayments.controller;
 import com.stripe.Stripe;
 import com.stripe.exception.StripeException;
 import com.stripe.model.Customer;
+import com.stripe.model.PaymentIntent;
+import com.strippayments.strippayments.dto.PaymentInfo;
 import com.strippayments.strippayments.model.CustomerData;
+import com.strippayments.strippayments.service.CheckoutSerivce;
+import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Value;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 import java.util.HashMap;
 import java.util.Map;
 
 @RestController
 @RequestMapping("/api")
+@RequiredArgsConstructor
+@CrossOrigin(origins = "http://localhost:4200")
 public class CheckoutController {
 
-
-    @Value("${stripe-secret-key}")
-    private String secretKey;
-
-    @RequestMapping("/createCustomer")
-    public ResponseEntity<CustomerData> checkout(@RequestBody CustomerData customerData) throws  StripeException {
-        Stripe.apiKey = secretKey;
-        Map<String, Object> customerParams = new HashMap<>();
-        customerParams.put("email", customerData.getEmail());
-        customerParams.put("name", customerData.getName());
-        Customer customer = Customer.create(customerParams);
-        customerData.setId(customer.getId());
-        return ResponseEntity.ok(customerData);
+    private final CheckoutSerivce checkoutSerivce;
+    @PostMapping("/payment-intent")
+    public ResponseEntity<String> createPaymentIntent(@RequestBody PaymentInfo paymentInfo) throws StripeException {
+        PaymentIntent paymentIntent = checkoutSerivce.createPaymentIntent(paymentInfo);
+        String payment = paymentIntent.toJson();
+        return new ResponseEntity<>(payment, HttpStatus.OK);
     }
 }
